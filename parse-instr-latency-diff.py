@@ -250,6 +250,26 @@ def main():
             
             # Pre-compute stats string for faster writing
             stats_lines = [
+                "TLDR",
+                "=" * 4,
+                "",
+                f"* Total instructions analyzed: {len(pc_changes)}",
+                f"* Found {len(cancelled_pairs)} canceling pairs within 5-instruction window",
+                f"* Maximum improvement: {min(pc_changes)} cycles",
+                f"* Maximum degradation: {max(pc_changes)} cycles",
+                f"* Top changes by magnitude:",
+            ]
+            
+            # Add top 5 most significant changes to TLDR
+            top_changes = sorted(change_groups.items(), key=lambda x: (abs(x[0]), x[1]), reverse=True)[:5]
+            for change, count in top_changes:
+                stats_lines.append(f"  - {change:+d} cycles × {count} occurrences")
+            
+            stats_lines.extend([
+                "",
+                "Detailed Analysis",
+                "=" * 16,
+                "",
                 "Latency Change Statistics (in cycles)",
                 "=" * 40,
                 "",
@@ -260,7 +280,7 @@ def main():
                 "",
                 "Plotted Changes (grouped by magnitude):",
                 "-" * 40
-            ]
+            ])
             
             # Add plotted changes first
             for i, change in enumerate(unique_changes):
@@ -298,7 +318,7 @@ def main():
             
             # Save both files
             img_path = os.path.join(build_dir, f"{output_base}.png")
-            stats_path = os.path.join(build_dir, f"{output_base}_stats.txt")
+            stats_path = os.path.join(build_dir, f"{output_base}_stats.adoc")
             
             # Save image with better quality
             plt.savefig(img_path, dpi=150, bbox_inches='tight', pad_inches=0.2)
