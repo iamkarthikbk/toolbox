@@ -1,0 +1,28 @@
+---
+# Cacheable memory region (defines x-axis range)
+cacheable_region:
+  start: "0x80033333"
+  end: "0x80036666"
+
+# PMP Configuration
+pmp_entries:
+  # PMP0: NAPOT region at 0x20003fff
+  - addr: "0x0000000020003fff"
+    cfg: "0x1f"  # R=1, W=1, X=1, A=NAPOT, L=0
+
+  # PMP1: NAPOT region at 0x2000cdff
+  - addr: "0x000000002000cdff"
+    cfg: "0x1f"  # R=1, W=1, X=1, A=NAPOT, L=0
+
+  # PMP2: NA4 region at 0x2000d400
+  - addr: "0x2000d400"
+    cfg: "0x0f"  # R=1, W=1, X=1, A=NA4, L=0
+
+  # PMP3: NA4 region at 0x2000d800
+  - addr: "0x2000d800"
+    cfg: "0x0d"  # R=1, W=0, X=1, A=NA4, L=0
+
+# Memory access to check (optional)
+access_check: "0x0000000080035004"
+access_size: 64  # Size in bytes (optional)
+access_type: "W"  # Access type: R, W, or X
